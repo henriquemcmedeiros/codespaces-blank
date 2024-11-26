@@ -15,7 +15,7 @@ typedef struct {
 
 // Declarações externas para as variáveis
 extern VirtualFile virtual_files[];  // Declaração externa para a lista de arquivos
-extern const size_t num_virtual_files;  // Declaração externa para o número de arquivos
+extern size_t num_virtual_files;  // Declaração externa para o número de arquivos
 
 // Estrutura de operações do FUSE
 extern struct fuse_operations fuse_ops;
