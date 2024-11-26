@@ -6,14 +6,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
-
-// Definindo a estrutura VirtualFile
-typedef struct {
-    const char *path;   // Caminho do arquivo
-    const char *content; // Conteúdo do arquivo
-    mode_t mode;        // Modo de acesso (por exemplo, se é um arquivo regular ou diretório)
-    size_t size;        // Tamanho do arquivo
-} VirtualFile;
+#include "fuse_operations.h"
 
 // Lista de arquivos e diretórios virtuais
 VirtualFile virtual_files[] = {
@@ -21,7 +14,6 @@ VirtualFile virtual_files[] = {
     {"/hello.txt", "Hello, World!", S_IFREG | 0444, 13}, // Arquivo virtual
     {"/example.txt", "Exemplo de conteúdo.", S_IFREG | 0644, 22} // Outro arquivo virtual
 };
-
 
 // Número total de arquivos/diretórios
 const size_t num_virtual_files = sizeof(virtual_files) / sizeof(VirtualFile);
@@ -43,7 +35,6 @@ static int fs_getattr(const char *path, struct stat *stbuf, struct fuse_file_inf
 
     return -ENOENT; // Arquivo não encontrado
 }
-
 
 // Função para listar os diretórios
 static int fs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset,
@@ -70,7 +61,6 @@ static int fs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t
 
     return 0;
 }
-
 
 // Função para leitura de arquivos
 static int fs_read(const char *path, char *buf, size_t size, off_t offset, struct fuse_file_info *fi) {
@@ -119,7 +109,6 @@ static int fs_write(const char *path, const char *buf, size_t size, off_t offset
 
     return -ENOENT; // Arquivo não encontrado
 }
-
 
 // Estrutura com as operações do Fuse
 struct fuse_operations fuse_ops = {
