@@ -1,18 +1,22 @@
 CC = gcc
-CFLAGS = -Wall -g -Iinclude `pkg-config fuse3 --cflags` -D_FILE_OFFSET_BITS=64
-LDFLAGS = `pkg-config fuse3 --libs`
-TARGET = fusefs
+CFLAGS = -Wall -Wextra -O2 `pkg-config fuse3 --cflags`
+LIBS = `pkg-config fuse3 --libs`
 
-SRC = src/main.c src/fuse_operations.c
-OBJ = $(SRC:.c=.o)
+OBJ = main.o fuseSteganografia.o manipuladorBmp.o
 
-all: $(TARGET)
+all: fuseSteganografia
 
-$(TARGET): $(OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS)
+fuseSteganografia: $(OBJ)
+	$(CC) $(CFLAGS) -o fuseSteganografia $(OBJ) $(LIBS)
 
-%.o: %.c
-	$(CC) -c $< -o $@ $(CFLAGS)
+main.o: main.c fuseSteganografia.h
+	$(CC) $(CFLAGS) -c main.c
+
+fuseSteganografia.o: fuseSteganografia.c fuseSteganografia.h manipuladorBmp.h
+	$(CC) $(CFLAGS) -c fuseSteganografia.c
+
+manipuladorBmp.o: manipuladorBmp.c manipuladorBmp.h
+	$(CC) $(CFLAGS) -c manipuladorBmp.c
 
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -f *.o fuseSteganografia
